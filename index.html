@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riverstone Training — Online Courses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16233A;
+    --paper:#F4F6F5;
+    --amber:#D9A441;
+    --slate:#5A6B7A;
+    --moss:#3E6259;
+    --card-bg:#FFFFFF;
+    --border:#DDE3E0;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+  }
+  h1,h2,h3,.serif{
+    font-family:'Newsreader',serif;
+    font-weight:500;
+    margin:0;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+
+  /* NAV */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(244,246,245,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  nav .wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-top:16px;padding-bottom:16px;
+  }
+  .brand{font-family:'Newsreader',serif;font-style:italic;font-size:1.3rem;font-weight:500;}
+  .navlinks{display:flex;gap:28px;font-size:0.95rem;}
+  .navlinks a{text-decoration:none;color:var(--slate);transition:color .15s;}
+  .navlinks a:hover{color:var(--ink);}
+
+  /* HERO */
+  header.hero{padding:88px 0 64px;}
+  .hero .wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:56px;align-items:end;}
+  .hero h1{font-size:2.9rem;line-height:1.15;max-width:14ch;}
+  .hero p.lede{color:var(--slate);font-size:1.1rem;max-width:46ch;margin-top:18px;}
+  .stats{display:flex;flex-direction:column;gap:18px;border-left:1px solid var(--border);padding-left:28px;}
+  .stat b{font-family:'Newsreader',serif;font-size:1.8rem;font-weight:500;display:block;}
+  .stat span{color:var(--slate);font-size:0.9rem;}
+
+  /* COURSES */
+  section.courses{padding:48px 0 80px;}
+  .courses .heading{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:32px;flex-wrap:wrap;gap:8px;}
+  .courses h2{font-size:1.9rem;}
+  .courses .heading p{color:var(--slate);margin:0;font-size:0.95rem;}
+
+  .course-grid{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:20px;
+  }
+  .course-card{
+    background:var(--card-bg);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:26px;
+    display:flex;flex-direction:column;
+    gap:14px;
+  }
+  .course-card.span4{grid-column:span 4;}
+  .course-card.span3{grid-column:span 3;}
+  .course-card.span2{grid-column:span 2;}
+  @media(max-width:760px){
+    .course-grid{grid-template-columns:1fr;}
+    .course-card{grid-column:span 1 !important;}
+  }
+
+  .course-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+  .course-card h3{font-size:1.35rem;line-height:1.3;}
+  .level-tag{
+    font-size:0.78rem;color:var(--moss);
+    border:1px solid var(--moss);
+    padding:3px 10px;border-radius:20px;
+    white-space:nowrap;flex-shrink:0;
+  }
+  .course-card p.desc{color:var(--slate);font-size:0.95rem;margin:0;flex:1;}
+  .course-meta{display:flex;gap:16px;font-size:0.85rem;color:var(--slate);border-top:1px solid var(--border);padding-top:14px;}
+  .register-btn{
+    align-self:flex-start;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;padding:10px 20px;
+    border-radius:4px;
+    font-family:'Inter',sans-serif;font-size:0.92rem;font-weight:500;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .register-btn:hover{background:var(--amber);color:var(--ink);}
+
+  /* ABOUT */
+  section.about{background:var(--ink);color:var(--paper);padding:64px 0;}
+  .about .wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:48px;}
+  .about h2{font-size:1.8rem;color:#fff;}
+  .about p{color:#C7D0D6;max-width:52ch;}
+
+  footer{padding:36px 0;color:var(--slate);font-size:0.85rem;}
+
+  /* MODAL */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(22,35,58,0.55);
+    display:none;align-items:center;justify-content:center;
+    z-index:100;padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--card-bg);
+    border-radius:8px;
+    max-width:440px;width:100%;
+    padding:32px;
+    position:relative;
+  }
+  .modal h3{font-size:1.4rem;margin-bottom:4px;}
+  .modal p.sub{color:var(--slate);font-size:0.9rem;margin:0 0 20px;}
+  .modal label{display:block;font-size:0.85rem;margin:14px 0 6px;color:var(--slate);}
+  .modal input,.modal select{
+    width:100%;padding:10px 12px;
+    border:1px solid var(--border);border-radius:4px;
+    font-family:'Inter',sans-serif;font-size:0.95rem;
+    background:var(--paper);
+  }
+  .modal-close{
+    position:absolute;top:18px;right:18px;
+    background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--slate);
+  }
+  .submit-btn{
+    margin-top:22px;width:100%;
+    background:var(--amber);color:var(--ink);
+    border:none;padding:12px;border-radius:4px;
+    font-family:'Inter',sans-serif;font-weight:600;font-size:0.95rem;
+    cursor:pointer;
+  }
+  .form-note{font-size:0.78rem;color:var(--slate);margin-top:12px;}
+  .success-msg{display:none;text-align:center;padding:20px 0;}
+  .success-msg.show{display:block;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">Riverstone Training</div>
+    <div class="navlinks">
+      <a href="#courses">Courses</a>
+      <a href="#about">About</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Practical online courses, taught by people who still do the work.</h1>
+      <p class="lede">Cohort-based training in software, data, and design — built for people who learn by building, not just watching.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>1,200+</b><span>students trained since 2019</span></div>
+      <div class="stat"><b>4.8/5</b><span>average course rating</span></div>
+      <div class="stat"><b>6</b><span>active cohorts this term</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="courses" id="courses">
+  <div class="wrap">
+    <div class="heading">
+      <h2>Current courses</h2>
+      <p>Register below — seats are limited per cohort.</p>
+    </div>
+    <div class="course-grid">
+
+      <div class="course-card span4">
+        <div class="course-top">
+          <h3>Web Development Fundamentals</h3>
+          <span class="level-tag">Beginner</span>
+        </div>
+        <p class="desc">HTML, CSS, and JavaScript from the ground up. Ends with a portfolio site you build and deploy yourself.</p>
+        <div class="course-meta"><span>8 weeks</span><span>2 evenings / week</span><span>$0 — free cohort</span></div>
+        <button class="register-btn" onclick="openModal('Web Development Fundamentals')">Register</button>
+      </div>
+
+      <div class="course-card span2">
+        <div class="course-top">
+          <h3>Data Analysis with Python</h3>
+          <span class="level-tag">Intermediate</span>
+        </div>
+        <p class="desc">Pandas, visualization, and real datasets.</p>
+        <div class="course-meta"><span>6 weeks</span></div>
+        <button class="register-btn" onclick="openModal('Data Analysis with Python')">Register</button>
+      </div>
+
+      <div class="course-card span3">
+        <div class="course-top">
+          <h3>UX Design Foundations</h3>
+          <span class="level-tag">Beginner</span>
+        </div>
+        <p class="desc">Research, wireframing, and prototyping for people switching into design.</p>
+        <div class="course-meta"><span>5 weeks</span><span>Cohort of 20</span></div>
+        <button class="register-btn" onclick="openModal('UX Design Foundations')">Register</button>
+      </div>
+
+      <div class="course-card span3">
+        <div class="course-top">
+          <h3>Backend Systems with Node.js</h3>
+          <span class="level-tag">Advanced</span>
+        </div>
+        <p class="desc">APIs, databases, and deployment for developers ready to go beyond tutorials.</p>
+        <div class="course-meta"><span>10 weeks</span><span>Project-based</span></div>
+        <button class="register-btn" onclick="openModal('Backend Systems with Node.js')">Register</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <h2>Why Riverstone</h2>
+    <p>Every course is taught live by an instructor actively working in the field, capped at a small cohort size, and built around a project you actually finish. No pre-recorded lecture dumps — just office hours, feedback, and a group of people learning alongside you.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Riverstone Training. Questions? Reach out at hello@riverstonetraining.example</div>
+</footer>
+
+<!-- REGISTRATION MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+
+    <div id="formView">
+      <h3>Register for a course</h3>
+      <p class="sub">We'll email you cohort dates and payment details (if any).</p>
+
+      <!-- 
+        FORMSPREE SETUP: 
+        1. Create a free account at https://formspree.io
+        2. Create a new form, copy its endpoint (looks like https://formspree.io/f/xxxxxxx)
+        3. Replace YOUR_FORM_ID below with that ID
+      -->
+      <form id="regForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <label for="course">Course</label>
+        <select id="course" name="Course" required>
+          <option>Web Development Fundamentals</option>
+          <option>Data Analysis with Python</option>
+          <option>UX Design Foundations</option>
+          <option>Backend Systems with Node.js</option>
+        </select>
+
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="Name" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="Email" required>
+
+        <label for="phone">Phone (optional)</label>
+        <input type="tel" id="phone" name="Phone">
+
+        <button type="submit" class="submit-btn">Submit registration</button>
+        <p class="form-note">Submissions are sent by email via Formspree — no account needed on your end.</p>
+      </form>
+    </div>
+
+    <div class="success-msg" id="successView">
+      <h3>You're registered 🎉</h3>
+      <p class="sub">Check your inbox for confirmation and next steps.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal(courseName){
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('course').value = courseName;
+    document.getElementById('formView').style.display = 'block';
+    document.getElementById('successView').classList.remove('show');
+  }
+  function closeModal(){
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+  document.getElementById('modalOverlay').addEventListener('click', function(e){
+    if(e.target === this) closeModal();
+  });
+
+  // Submit via fetch so we can show an in-page success message instead of redirecting to Formspree
+  document.getElementById('regForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: {'Accept': 'application/json'}
+    }).then(response => {
+      if(response.ok){
+        document.getElementById('formView').style.display = 'none';
+        document.getElementById('successView').classList.add('show');
+        form.reset();
+      } else {
+        alert('Something went wrong — please try again, or email us directly.');
+      }
+    }).catch(() => {
+      alert('Could not submit right now. Please check your connection and try again.');
+    });
+  });
+</script>
+
+</body>
+</html>
