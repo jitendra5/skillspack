@@ -605,13 +605,17 @@
       <h3>Register for a course</h3>
       <p class="sub">We'll email you cohort dates and payment details (if any).</p>
 
-      <!-- 
-        FORMSPREE SETUP: 
-        1. Create a free account at https://formspree.io
-        2. Create a new form, copy its endpoint (looks like https://formspree.io/f/xxxxxxx)
-        3. Replace YOUR_FORM_ID below with that ID
+      <!--
+        REGISTRATIONS ARE EMAILED TO skillpack.info@gmail.com VIA FORMSUBMIT (formsubmit.co)
+        One-time activation: after the site is live, submit one test registration.
+        FormSubmit will email skillpack.info@gmail.com an "Activate Form" link - click it once.
+        Registrations are delivered from then on. (Optional: FormSubmit's activation email also gives
+        you a random alias; replace the email address in the action URL with it to hide the address from spammers.)
       -->
-      <form id="regForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <form id="regForm" action="https://formsubmit.co/ajax/skillpack.info@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="New Skillpack course registration">
+        <input type="hidden" name="_template" value="table">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label for="course">Course</label>
         <select id="course" name="Course" required>
           <option>Web Development Fundamentals</option>
@@ -626,19 +630,19 @@
         <input type="text" id="name" name="Name" required>
 
         <label for="email">Email</label>
-        <input type="email" id="email" name="Email" required>
+        <input type="email" id="email" name="email" required>
 
         <label for="phone">Phone (optional)</label>
         <input type="tel" id="phone" name="Phone">
 
-        <button type="submit" class="submit-btn">Submit registration</button>
-        <p class="form-note">Submissions are sent by email via Formspree — no account needed on your end.</p>
+        <button type="submit" class="submit-btn" id="submitBtn">Submit registration</button>
+        <p class="form-note">Your details go straight to the Skillpack team. We'll reply by email.</p>
       </form>
     </div>
 
     <div class="success-msg" id="successView">
       <h3>You're registered 🎉</h3>
-      <p class="sub">Check your inbox for confirmation and next steps.</p>
+      <p class="sub">Thanks — we've received your details and will email you cohort dates and next steps soon.</p>
     </div>
   </div>
 </div>
@@ -725,25 +729,35 @@
     if(e.target === this) closeModal();
   });
 
-  // Submit via fetch so we can show an in-page success message instead of redirecting to Formspree
+  // Send the registration to skillpack.info@gmail.com (via FormSubmit) and show an in-page success message
   document.getElementById('regForm').addEventListener('submit', function(e){
     e.preventDefault();
     const form = e.target;
+    const btn = document.getElementById('submitBtn');
     const data = new FormData(form);
+    // show the full course name in the email, not the short value (e.g. "VAPT")
+    const courseSel = document.getElementById('course');
+    data.set('Course', courseSel.options[courseSel.selectedIndex].text);
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
     fetch(form.action, {
       method: 'POST',
       body: data,
       headers: {'Accept': 'application/json'}
-    }).then(response => {
-      if(response.ok){
+    }).then(response => response.json().then(result => ({ok: response.ok, result})))
+    .then(({ok, result}) => {
+      if(ok && String(result.success) === 'true'){
         document.getElementById('formView').style.display = 'none';
         document.getElementById('successView').classList.add('show');
         form.reset();
       } else {
-        alert('Something went wrong — please try again, or email us directly.');
+        alert('Sorry, your registration could not be sent. Please try again, or email us at skillpack.info@gmail.com.');
       }
     }).catch(() => {
-      alert('Could not submit right now. Please check your connection and try again.');
+      alert('Could not submit right now. Please check your connection and try again, or email us at skillpack.info@gmail.com.');
+    }).finally(() => {
+      btn.disabled = false;
+      btn.textContent = 'Submit registration';
     });
   });
 </script>
